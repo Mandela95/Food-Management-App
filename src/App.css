@@ -1,0 +1,53 @@
+.auth-container {
+  background-image: url(./assets/images/auth-bg.png);
+}
+
+.bg-overlay {
+  background: linear-gradient(rgba(47, 140, 96, 0.63), rgba(0, 0, 0, 0.62));
+}
+
+.form-control {
+  background-color: #F5F6F8 !important;
+}
+
+/* .reset-form {
+  max-height: 90vh;
+  overflow-y: scroll;
+} */
+
+.not-found {
+  background-image: url(./assets/images/404bg.png);
+  background-size: cover;
+  height: 100vh;
+  background-repeat: no-repeat;
+}
+
+.sidebar-container .ps-sidebar-container {
+  background-color: #1F263E;
+  color: #fff;
+  height: 100vh;
+}
+
+/* TODO: put an active class when clicked */
+/* TODO: not(1) on hover didn't work properly to disable the background color on hover on logo */
+.sidebar-container .ps-sidebar-container .ps-menu-button:hover {
+  background-color: rgba(47, 140, 96, .4);
+}
+
+.ps-menu-button {
+  margin: 15px 0;
+}
+
+.css-wx7wi4 {
+  width: auto !important;
+}
+
+.home {
+  margin-top: 80px;
+}
+
+.header-container {
+  background-image: url("./assets/images/header-bg-svg.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
