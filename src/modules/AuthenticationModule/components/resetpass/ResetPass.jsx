@@ -93,7 +93,7 @@ export default function ResetPass() {
 											<i className="fa fa-lock"></i>
 										</span>
 										<input
-											type="text"
+											type="password"
 											className="form-control"
 											placeholder="New Password"
 											{...register("password", {
@@ -115,7 +115,7 @@ export default function ResetPass() {
 											<i className="fa fa-lock"></i>
 										</span>
 										<input
-											type="text"
+											type="password"
 											className="form-control"
 											placeholder="Confirm New Password"
 											{...register("confirmPassword", {

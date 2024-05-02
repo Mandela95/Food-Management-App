@@ -62,14 +62,16 @@ export default function Login({ saveLoginData }) {
 										/>
 									</div>
 									{errors.email && (
-										<p className="alert alert-danger">{errors.email.message}</p>
+										<p className="py-2 alert alert-danger">
+											{errors.email.message}
+										</p>
 									)}
 									<div className="mb-3 input-group">
 										<span className="input-group-text" id="basic-addon1">
 											<i className="fa fa-lock"></i>
 										</span>
 										<input
-											type="text"
+											type="password"
 											className="form-control"
 											placeholder="Password"
 											{...register("password", {
@@ -82,7 +84,7 @@ export default function Login({ saveLoginData }) {
 										/>
 									</div>
 									{errors.password && (
-										<p className="alert alert-danger">
+										<p className="py-2 alert alert-danger">
 											{errors.password.message}
 										</p>
 									)}

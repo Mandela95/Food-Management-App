@@ -26,12 +26,22 @@
   background-color: #1F263E;
   color: #fff;
   height: 100vh;
+  border-radius: 0 100px 0 0;
 }
 
+/* .ps-sidebar-container.css-dip3t8 {
+  position: fixed !important;
+} */
+
 /* TODO: put an active class when clicked */
+/* Todo => .sidebar-container .ps-sidebar-container>.ps-menu-button:not(:first-child):hover */
 /* TODO: not(1) on hover didn't work properly to disable the background color on hover on logo */
 .sidebar-container .ps-sidebar-container .ps-menu-button:hover {
   background-color: rgba(47, 140, 96, .4);
+}
+
+.sidebar-container .ps-sidebar-container .ps-menu-button:hover:not(:first-child) {
+  background-color: transparent !important;
 }
 
 .ps-menu-button {

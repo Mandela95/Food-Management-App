@@ -1,7 +1,6 @@
 import React from "react";
 import logo from "../../../../assets/images/logo.png";
 import notfound from "../../../../assets/images/404 Not Found.png";
-import Login from "../../../AuthenticationModule/components/login/Login";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function NotFound() {

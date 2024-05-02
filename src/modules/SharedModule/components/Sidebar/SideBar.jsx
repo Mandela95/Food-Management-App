@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import toggler from "../../../../assets/images/3.png";
 
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 export default function SideBar() {
 	const [isCollapse, setIsCollapse] = useState(false);
 	const toggleCollapse = () => {
 		setIsCollapse(!isCollapse);
 	};
+
+	const navigate = useNavigate();
+
+	function logout() {
+		localStorage.removeItem("token");
+		navigate("/login");
+	}
 	return (
 		<>
 			<div className="sidebar-container">
@@ -69,6 +76,7 @@ export default function SideBar() {
 							title="Logout"
 							icon={<i className="fas fa-sign-out-alt"></i>}
 							component={<Link to="/login" />}
+							onClick={logout}
 						>
 							Logout
 						</MenuItem>

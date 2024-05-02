@@ -39,14 +39,14 @@ export default function ForgetPass({ saveLoginData }) {
 							</div>
 							<div>
 								<h3>Forgot Your Password?</h3>
-								<p className="text-muted">
+								<p className="mb-5 text-muted">
 									No worries! Please enter your email and we will send a
 									password reset link
 								</p>
 							</div>
 							<div className="form-content">
 								<form onSubmit={handleSubmit(onSubmit)}>
-									<div className="my-2 input-group">
+									<div className="input-group">
 										<span className="input-group-text" id="basic-addon1">
 											<i className="fa fa-envelope"></i>
 										</span>
@@ -64,11 +64,11 @@ export default function ForgetPass({ saveLoginData }) {
 										/>
 									</div>
 									{errors.email && (
-										<p className="py-2 alert alert-danger">
+										<p className="py-2 my-2 alert alert-danger">
 											{errors.email.message}
 										</p>
 									)}
-									<button className=" btn btn-success w-100">Submit</button>
+									<button className="my-5 btn btn-success w-100">Submit</button>
 								</form>
 							</div>
 						</div>
