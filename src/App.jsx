@@ -1,8 +1,10 @@
 import "./App.css";
 
-import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	Navigate,
+	RouterProvider,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import ForgetPass from "./modules/AuthenticationModule/components/forgetpass/ForgetPass";
 import Login from "./modules/AuthenticationModule/components/login/Login";
@@ -16,22 +18,14 @@ import MasterLayout from "./modules/SharedModule/components/MasterLayout/MasterL
 import NotFound from "./modules/SharedModule/components/NotFound/NotFound";
 import ProtectedRoute from "./modules/SharedModule/components/ProtectedRoute/ProtectedRoute";
 import UsersList from "./modules/UsersModule/components/UsersList/UsersList";
+import RecipeData from "./modules/RecipesModule/components/RecipeData/RecipeData";
+import VerifyAccount from "./modules/AuthenticationModule/components/VerifyAccount/VerifyAccount";
+import FavoriteList from "./modules/FavoritesModule/components/FavoriteList/FavoriteList";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContex";
 
 function App() {
-	const [loginData, setLoginData] = useState(null);
-	const saveLoginData = () => {
-		let encodedToken = localStorage.getItem("token");
-		let decodedToken = jwtDecode(encodedToken);
-		// console.log(decodedToken);
-		setLoginData(decodedToken);
-	};
-
-	useEffect(() => {
-		if (localStorage.getItem("token")) {
-			saveLoginData();
-		}
-	}, []);
-
+	let { loginData, saveLoginData } = useContext(AuthContext);
 	// could be router like documentation or routes
 	const routes = createBrowserRouter([
 		{
@@ -48,8 +42,34 @@ function App() {
 				{ path: "dashboard", element: <Dashboard /> },
 				{ path: "home", element: <Dashboard /> },
 				{ path: "recipes", element: <RecipesList /> },
-				{ path: "users", element: <UsersList /> },
-				{ path: "categories", element: <CategoriesList /> },
+				{ path: "recipeData", element: <RecipeData /> },
+				{
+					path: "users",
+					element:
+						loginData && loginData.userGroup === "SuperAdmin" ? (
+							<UsersList />
+						) : (
+							<Navigate to="/login" />
+						),
+				},
+				{
+					path: "categories",
+					element:
+						loginData && loginData.userGroup === "SuperAdmin" ? (
+							<CategoriesList />
+						) : (
+							<Navigate to="/login" />
+						),
+				},
+				{
+					path: "favorites",
+					element:
+						loginData && loginData.userGroup === "SystemUser" ? (
+							<FavoriteList />
+						) : (
+							<Navigate to="/login" />
+						),
+				},
 			],
 		},
 		{
@@ -62,6 +82,7 @@ function App() {
 				{ path: "register", element: <Register /> },
 				{ path: "forgetpass", element: <ForgetPass /> },
 				{ path: "resetpass", element: <ResetPass /> },
+				{ path: "verifyAccount", element: <VerifyAccount /> },
 			],
 		},
 	]);

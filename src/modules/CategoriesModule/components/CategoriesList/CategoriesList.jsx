@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../../SharedModule/components/Header/Header";
 import categoriesImg from "../../../../assets/images/recipes.png";
 import axios from "axios";
@@ -8,7 +8,9 @@ import Modal from "react-bootstrap/Modal";
 import { useForm } from "react-hook-form";
 import DeleteData from "../../../SharedModule/components/DeleteData/DeleteData";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../../../context/AuthContex";
 export default function CategoriesList() {
+	let { requestHeaders, baseUrl } = useContext(AuthContext);
 	const [categoriesList, setCategoriesList] = useState([]);
 
 	const [show, setShow] = useState(false);
@@ -16,6 +18,8 @@ export default function CategoriesList() {
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [nameValue, setNameValue] = useState("");
+	const [arrayOfPages, setArrayOfPages] = useState([]);
 
 	const [showDelete, setShowDelete] = useState(false);
 	const handleDeleteClose = () => setShowDelete(false);
@@ -33,15 +37,11 @@ export default function CategoriesList() {
 	//⭐ add new category Crud - create⭐
 	const onSubmit = async (data) => {
 		try {
-			let response = await axios.post(
-				"https://upskilling-egypt.com:3006/api/v1/Category",
-				data,
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
+			let response = await axios.post(`${baseUrl}/Category`, data, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			});
 			handleClose();
 			getCategoriesList();
 			toast.success("Category Has been added successfully");
@@ -52,15 +52,19 @@ export default function CategoriesList() {
 	};
 
 	//⭐get categories list => cRud - retrieve⭐
-	const getCategoriesList = async () => {
+	const getCategoriesList = async (name, pageSize, pageNumber) => {
 		try {
 			let response = await axios.get(
-				"https://upskilling-egypt.com:3006/api/v1/Category/?pageSize=10&pageNumber=1",
+				`${baseUrl}/Category/?pageSize=${pageSize}&pageNumber=${pageNumber}`,
 				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+					headers: requestHeaders,
+					params: { name: name },
 				}
+			);
+			setArrayOfPages(
+				Array(response.data.totalNumberOfPages)
+					.fill()
+					.map((_, i) => i + 1)
 			);
 			setCategoriesList(response.data.data);
 		} catch (error) {
@@ -71,14 +75,9 @@ export default function CategoriesList() {
 	//⭐ delete category cruD - delete⭐
 	const onDeleteSubmit = async () => {
 		try {
-			let response = await axios.delete(
-				`https://upskilling-egypt.com:3006/api/v1/Category/${categoryId}`,
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
+			let response = await axios.delete(`${baseUrl}/Category/${categoryId}`, {
+				headers: requestHeaders,
+			});
 			handleDeleteClose();
 			toast.success("Category deleted successfully");
 			getCategoriesList();
@@ -88,27 +87,30 @@ export default function CategoriesList() {
 	};
 
 	//⭐ update category crUd - update⭐
-	const updateCategoryList = async () => {
-		try {
-			let response = await axios.put(
-				`https://upskilling-egypt.com:3006/api/v1/Category/${categoryId}`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
-			handleClose();
-			getCategoriesList();
-			toast.success("Category updated successfully");
-		} catch (error) {
-			console.log(error);
-		}
+	// const updateCategoryList = async () => {
+	// 	try {
+	// 		let response = await axios.put(
+	// 			`${baseUrl}/Category/${categoryId}`,
+	// 			{},
+	// 			{
+	// 				headers: requestHeaders,
+	// 			}
+	// 		);
+	// 		handleClose();
+	// 		getCategoriesList();
+	// 		toast.success("Category updated successfully");
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
+
+	const getNameValue = (input) => {
+		setNameValue(input.target.value);
+		getCategoriesList(input.target.value, 10, 1);
 	};
 
 	useEffect(() => {
-		getCategoriesList();
+		getCategoriesList("", 10, 1);
 	}, []);
 	return (
 		<>
@@ -173,9 +175,25 @@ export default function CategoriesList() {
 					</div>
 				</div>
 			</div>
-			<table className="table p-2 m-3">
+
+			{/* search input - filtration */}
+
+			<div className="my-3 filtration">
+				<div className="row">
+					<div className="col-md-12">
+						<input
+							type="text"
+							placeholder="Search By Category Name"
+							className="form-control"
+							onChange={getNameValue}
+						/>
+					</div>
+				</div>
+			</div>
+
+			<table className="table p-2 m-1">
 				<thead>
-					<tr className="text-muted">
+					<tr className="table-row">
 						<th scope="col">No.</th>
 						<th scope="col">Category Name</th>
 						<th scope="col">Creation Date</th>
@@ -188,11 +206,11 @@ export default function CategoriesList() {
 							<tr key={item.id}>
 								<th scope="row">{index + 1}</th>
 								<td>{item.name}</td>
-								<td>{item.creationDate}</td>
+								<td>{new Date(item.creationDate).toDateString()}</td>
 								<td>
 									<i
 										role="button"
-										className="mx-3 fa fa-edit text-primary"
+										className="mx-2 fa fa-edit text-info"
 										title="edit"
 										onClick={handleShow}
 									></i>
@@ -212,6 +230,36 @@ export default function CategoriesList() {
 					)}
 				</tbody>
 			</table>
+
+			{/* pagination */}
+
+			<nav
+				className="my-2 d-flex justify-content-center"
+				aria-label="Page navigation example"
+			>
+				<ul role="button" className="pagination pointer">
+					<li className="page-item">
+						<a className="page-link" aria-label="Previous" title="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					{arrayOfPages.map((pageNumber) => (
+						<li
+							key={pageNumber}
+							className="page-item"
+							onClick={() => getCategoriesList(nameValue, 10, pageNumber)}
+						>
+							<a className="page-link">{pageNumber}</a>
+						</li>
+					))}
+					{/* // Todo: handle arrows prev and next */}
+					<li className="page-item">
+						<a className="page-link" aria-label="Next" title="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
 		</>
 	);
 }

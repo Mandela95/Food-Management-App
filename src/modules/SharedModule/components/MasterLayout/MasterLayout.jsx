@@ -8,9 +8,9 @@ export default function MasterLayout({ loginData }) {
 		<>
 			<div className="d-flex">
 				<div>
-					<SideBar />
+					<SideBar loginData={loginData} />
 				</div>
-				<div className="w-100 me-3">
+				<div className="m-3 w-100">
 					<Navbar loginData={loginData} />
 					<Outlet />
 				</div>

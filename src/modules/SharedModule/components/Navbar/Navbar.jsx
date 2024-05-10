@@ -2,7 +2,6 @@ import React from "react";
 import avatar from "../../../../assets/images/avatar.png";
 
 export default function Navbar({ loginData }) {
-	// console.log(loginData);
 	return (
 		<>
 			<nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -19,11 +18,16 @@ export default function Navbar({ loginData }) {
 						<span className="navbar-toggler-icon"></span>
 					</button>
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul className="mb-2 navbar-nav ms-auto mb-lg-0">
+						<ul className="mb-2 d-flex align-items-center navbar-nav ms-auto mb-lg-0">
 							<li className="nav-item">
 								<a className="nav-link">
 									<img className="mx-1" role="button" src={avatar} alt="" />
 									{loginData?.userName}
+								</a>
+							</li>
+							<li className="nav-item">
+								<a className="nav-link" aria-current="page">
+									<i className="fas fa-bell"></i>
 								</a>
 							</li>
 						</ul>

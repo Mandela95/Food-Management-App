@@ -5,15 +5,8 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
 
-export default function Login({ saveLoginData }) {
-	const [showPassword, setShowPassword] = useState(false);
-
-	const togglePasswordVisibility = () => {
-		setShowPassword(!showPassword);
-	};
-
+export default function VerifyAccount() {
 	const navigate = useNavigate();
 	const {
 		register,
@@ -23,19 +16,18 @@ export default function Login({ saveLoginData }) {
 
 	const onSubmit = async (data) => {
 		try {
-			let response = await axios.post(
-				"https://upskilling-egypt.com:3006/api/v1/Users/Login",
+			let response = await axios.put(
+				"https://upskilling-egypt.com:3006/api/v1/Users/verify",
 				data
 			);
-			localStorage.setItem("token", response.data.token);
-			saveLoginData();
 			// console.log(response.data.token);
-			toast.success("Logged in successfully");
-			navigate("/dashboard");
+			toast.success("Account verified successfully");
+			navigate("/login");
 		} catch (error) {
 			toast.error(error.response.data.message);
 		}
 	};
+
 	return (
 		<>
 			<div className="auth-container">
@@ -46,7 +38,7 @@ export default function Login({ saveLoginData }) {
 								<img src={logo} alt="" className="w-50" />
 							</div>
 							<div className="form-content">
-								<h3>Log In</h3>
+								<h3>Verify Account</h3>
 								<p className="text-muted">
 									Welcome Back! Please enter your details
 								</p>
@@ -78,45 +70,26 @@ export default function Login({ saveLoginData }) {
 											<i className="fa fa-lock"></i>
 										</span>
 										<input
-											type={showPassword ? "text" : "password"}
+											type="text"
 											className="form-control"
-											placeholder="Password"
-											{...register("password", {
-												required: "Password is required",
+											placeholder="Code"
+											{...register("code", {
+												required: "Code is required",
 												minLength: {
-													value: 6,
-													message: "Password must be at least 6 characters",
+													value: 4,
+													message: "Code must be 4 characters",
 												},
 											})}
 										/>
-										{/* eye show password icon toggler */}
-										<span
-											onClick={togglePasswordVisibility}
-											style={{ cursor: "pointer" }}
-											className="input-group-text"
-											id="basic-addon2"
-										>
-											<i
-												className={
-													showPassword ? "fa fa-eye" : "fa fa-eye-slash"
-												}
-											></i>
-										</span>
 									</div>
-									{errors.password && (
+									{errors.code && (
 										<p className="py-2 alert alert-danger">
-											{errors.password.message}
+											{errors.code.message}
 										</p>
 									)}
-									<div className="mb-4 d-flex justify-content-between">
-										<Link className="text-black" to="/register">
-											Register Now?
-										</Link>
-										<Link className="text-success" to="/forgetpass">
-											Forgot Password?
-										</Link>
-									</div>
-									<button className="btn btn-success w-100">Login</button>
+									<button className="btn btn-success w-100">
+										Verify Account
+									</button>
 								</form>
 							</div>
 						</div>

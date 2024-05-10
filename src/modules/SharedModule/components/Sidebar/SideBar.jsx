@@ -1,22 +1,37 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import toggler from "../../../../assets/images/3.png";
 
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
-export default function SideBar() {
+import Modal from "react-bootstrap/Modal";
+import ChangePassword from "../../../AuthenticationModule/components/changePassword/ChangePassword";
+export default function SideBar({ loginData }) {
 	const [isCollapse, setIsCollapse] = useState(false);
 	const toggleCollapse = () => {
 		setIsCollapse(!isCollapse);
 	};
 
+	console.log(loginData);
+
 	const navigate = useNavigate();
+
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 
 	function logout() {
 		localStorage.removeItem("token");
+		localStorage.removeItem("userData");
 		navigate("/login");
 	}
+
 	return (
 		<>
+			<Modal show={show} onHide={handleClose}>
+				<Modal.Body>
+					<ChangePassword logoutProp={logout} />
+				</Modal.Body>
+			</Modal>
 			<div className="sidebar-container">
 				<Sidebar collapsed={isCollapse}>
 					<Menu
@@ -25,8 +40,8 @@ export default function SideBar() {
 								// the active class will be added automatically by react router
 								// so we can use it to style the active menu item
 								[`&.active`]: {
-									backgroundColor: "#f00",
-									color: "#fff",
+									backgroundColor: "#f00 !important",
+									color: "#fff !important",
 								},
 							},
 						}}
@@ -44,31 +59,50 @@ export default function SideBar() {
 						>
 							Home
 						</MenuItem>
-						<MenuItem
-							title="Users"
-							icon={<i className="fas fa-user-friends"></i>}
-							component={<Link to="/dashboard/users" />}
-						>
-							Users
-						</MenuItem>
+						{loginData?.userGroup == "SuperAdmin" ? (
+							<MenuItem
+								title="Users"
+								icon={<i className="fas fa-user-friends"></i>}
+								component={<Link to="/dashboard/users" />}
+							>
+								Users
+							</MenuItem>
+						) : (
+							""
+						)}
 						<MenuItem
 							title="Recipes"
-							icon={<i className="fas fa-th-large"></i>}
+							icon={<i className="fas fa-utensils"></i>}
 							component={<Link to="/dashboard/recipes" />}
 						>
 							Recipes
 						</MenuItem>
-						<MenuItem
-							title="Categories"
-							icon={<i className="fas fa-calendar-alt"></i>}
-							component={<Link to="/dashboard/categories" />}
-						>
-							Categories
-						</MenuItem>
+						{loginData?.userGroup == "SuperAdmin" ? (
+							<MenuItem
+								title="Categories"
+								icon={<i className="fas fa-calendar-alt"></i>}
+								component={<Link to="/dashboard/categories" />}
+							>
+								Categories
+							</MenuItem>
+						) : (
+							""
+						)}
+						{loginData?.userGroup == "SystemUser" ? (
+							<MenuItem
+								title="Favorites"
+								icon={<i className="far fa-heart"></i>}
+								component={<Link to="/dashboard/favorites" />}
+							>
+								Favorites
+							</MenuItem>
+						) : (
+							""
+						)}
 						<MenuItem
 							title="Change Password"
 							icon={<i className="fa fa-lock"></i>}
-							// TODO: show change password modal
+							onClick={handleShow}
 						>
 							Change Password
 						</MenuItem>
@@ -79,7 +113,7 @@ export default function SideBar() {
 							onClick={logout}
 						>
 							Logout
-						</MenuItem>
+						</MenuItem>{" "}
 					</Menu>
 				</Sidebar>
 			</div>
