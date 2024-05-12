@@ -10,7 +10,7 @@ export default function MasterLayout({ loginData }) {
 				<div>
 					<SideBar loginData={loginData} />
 				</div>
-				<div className="m-3 w-100">
+				<div className="m-3 vh-100 w-100">
 					<Navbar loginData={loginData} />
 					<Outlet />
 				</div>

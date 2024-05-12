@@ -5,9 +5,13 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 
 export default function ChangePassword() {
+	const [showOldPassword, setShowOldPassword] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+	const toggleOldPasswordVisibility = () => {
+		setShowOldPassword(!showOldPassword);
+	};
 	const togglePasswordVisibility = () => {
 		setShowPassword(!showPassword);
 	};
@@ -62,13 +66,23 @@ export default function ChangePassword() {
 						<i className="fa fa-lock"></i>
 					</span>
 					<input
-						type="text"
+						type={showOldPassword ? "text" : "password"}
 						className="form-control"
 						placeholder="Old Password"
 						{...register("oldPassword", {
 							required: "Old Password Is Required",
 						})}
 					/>
+					<span
+						onClick={toggleOldPasswordVisibility}
+						style={{ cursor: "pointer" }}
+						className="input-group-text"
+						id="basic-addon2"
+					>
+						<i
+							className={showOldPassword ? "fa fa-eye" : "fa fa-eye-slash"}
+						></i>
+					</span>
 				</div>
 				{errors.oldPassword && (
 					<p className="py-1 alert alert-danger">

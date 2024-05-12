@@ -29,7 +29,7 @@ export default function RecipeData() {
 	};
 
 	const onSubmit = async (data) => {
-		// send recipe form data not only data
+		//⭐ send recipe form data not only data⭐
 		let recipeFormData = appendToFormData(data);
 		try {
 			let response = await axios.post(

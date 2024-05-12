@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../../SharedModule/components/Header/Header";
 import recipesImg from "../../../../assets/images/header.png";
 import NoData from "../../../SharedModule/components/NoData/NoData";
@@ -11,15 +11,16 @@ import DeleteData from "../../../SharedModule/components/DeleteData/DeleteData";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../../../context/AuthContex";
 useNavigate;
 
 export default function RecipesList() {
+	let { loginData, requestHeaders, baseUrl } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [recipesList, setRecipesList] = useState([]);
 	const [categoriesList, setCategoriesList] = useState([]);
 	const [tagsList, setTagsList] = useState([]);
 	const [recipeId, setRecipeId] = useState();
-	const [userData, setUserData] = useState(null);
 
 	const [nameValue, setNameValue] = useState("");
 	const [catValue, setCatValue] = useState("");
@@ -40,7 +41,7 @@ export default function RecipesList() {
 		setRecipeId(id);
 		setShowDelete(true);
 	};
-	const [show, setShow] = useState(false);
+	// const [show, setShow] = useState(false);
 	const [SelectedRecipeImage, setSelectedRecipeImage] = useState("");
 	const [SelectedRecipeDesc, setSelectedRecipeDesc] = useState("");
 	const [SelectedRecipe, setSelectedRecipe] = useState(null);
@@ -63,12 +64,10 @@ export default function RecipesList() {
 		try {
 			setLoading(true);
 			await axios.post(
-				"https://upskilling-egypt.com:3006/api/v1/userRecipe/",
+				`${baseUrl}/userRecipe/`,
 				{ recipeId: recipeId },
 				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+					headers: requestHeaders,
 				}
 			);
 			toast.success("Added to Favourites");
@@ -99,11 +98,9 @@ export default function RecipesList() {
 	const getRecipesList = async (name, tagId, catId, pageSize, pageNumber) => {
 		try {
 			let response = await axios.get(
-				`https://upskilling-egypt.com:3006/api/v1/Recipe/?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+				`${baseUrl}/Recipe/?pageSize=${pageSize}&pageNumber=${pageNumber}`,
 				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+					headers: requestHeaders,
 					params: {
 						name: name,
 						tagId: tagId,
@@ -136,18 +133,18 @@ export default function RecipesList() {
 		return formData;
 	};
 
-	//update submit
+	//Todo: handle update submit
 	const onUpdateSubmit = async (data) => {
 		let recipeFormData = appendToFormData(data);
 		try {
 			let response = await axios.put(
-				`https://upskilling-egypt.com:3006/api/v1/Recipe/${recipeId}`,
+				`${baseUrl}/Recipe/${recipeId}`,
 				recipeFormData,
 				{
-					headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+					headers: requestHeaders,
 				}
 			);
-			toast.success("Recipe Updated");
+			toast.success("Recipe Updated Successfully");
 			handleUpdateClose();
 			getRecipesList();
 			console.log(response);
@@ -160,14 +157,9 @@ export default function RecipesList() {
 	// ⭐ delete recipe cruD - delete⭐
 	const onDeleteSubmit = async () => {
 		try {
-			let response = await axios.delete(
-				`https://upskilling-egypt.com:3006/api/v1/Recipe/${recipeId}`,
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
+			let response = await axios.delete(`${baseUrl}/Recipe/${recipeId}`, {
+				headers: requestHeaders,
+			});
 			handleDeleteClose();
 			toast.success(`Category deleted successfully`);
 			getRecipesList();
@@ -180,11 +172,9 @@ export default function RecipesList() {
 	const getCategoriesList = async () => {
 		try {
 			let response = await axios.get(
-				"https://upskilling-egypt.com:3006/api/v1/Category/?pageSize=10&pageNumber=1",
+				`${baseUrl}/Category/?pageSize=10&pageNumber=1`,
 				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+					headers: requestHeaders,
 				}
 			);
 			setCategoriesList(response.data.data);
@@ -196,14 +186,9 @@ export default function RecipesList() {
 	// get tags list
 	const getTagsList = async () => {
 		try {
-			let response = await axios.get(
-				"https://upskilling-egypt.com:3006/api/v1/tag",
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
+			let response = await axios.get(`${baseUrl}/tag`, {
+				headers: requestHeaders,
+			});
 			// console.log(response.data);
 			setTagsList(response.data);
 		} catch (error) {
@@ -230,7 +215,6 @@ export default function RecipesList() {
 		getRecipesList("", "", "", 5, 1);
 		getCategoriesList();
 		getTagsList();
-		setUserData(JSON.parse(localStorage.getItem("userData")));
 	}, []);
 
 	return (
@@ -265,9 +249,9 @@ export default function RecipesList() {
 				<Modal.Body>
 					<form onSubmit={handleSubmit(onUpdateSubmit)} className="my-4">
 						<div className="row justify-content-center">
-							<div className="text-center col-md-6">
+							{/* <div className="text-center col-md-6">
 								<img className="" src={recipesImg} alt="no img" />
-							</div>
+							</div> */}
 						</div>
 						<div className="mb-3 input-group">
 							<input
@@ -288,7 +272,7 @@ export default function RecipesList() {
 								className="form-control bg-light"
 								placeholder="Recipe description"
 								{...register("description", {
-									required: "description is required",
+									required: "Description is required",
 								})}
 							/>
 						</div>
@@ -304,7 +288,7 @@ export default function RecipesList() {
 								className="form-control bg-light"
 								placeholder="Recipe price"
 								{...register("price", {
-									required: "price is required",
+									required: "Price is required",
 								})}
 							/>
 						</div>
@@ -316,10 +300,10 @@ export default function RecipesList() {
 							<select
 								className="form-control bg-light"
 								{...register("tagId", {
-									required: "tag is required",
+									required: "Tag is required",
 								})}
 							>
-								<option value="">select</option>
+								<option value="">Select Tag</option>
 								{tagsList.map((tag) => (
 									<option key={tag.id} value={tag.id}>
 										{tag.name}
@@ -336,7 +320,7 @@ export default function RecipesList() {
 								type="file"
 								className="form-control bg-light"
 								{...register("recipeImage", {
-									required: "image is required",
+									required: "Image is required",
 								})}
 							/>
 						</div>
@@ -350,10 +334,10 @@ export default function RecipesList() {
 							<select
 								className="form-control bg-light"
 								{...register("categoriesIds", {
-									required: "categoriesIds is required",
+									required: "CategoriesIds is required",
 								})}
 							>
-								<option value="">select</option>
+								<option value="">Select Category</option>
 								{categoriesList.map((cat) => (
 									<option key={cat.id} value={cat.id}>
 										{cat.name}
@@ -405,7 +389,7 @@ export default function RecipesList() {
 						<span>You can check all details</span>
 					</div>
 					<div className="px-0 py-4 col-6 d-flex justify-content-end">
-						{userData?.userGroup == "SuperAdmin" ? (
+						{loginData?.userGroup == "SuperAdmin" ? (
 							<button className="py-3 btn btn-success" onClick={goToRecipeData}>
 								Add New Recipe
 							</button>
@@ -491,7 +475,7 @@ export default function RecipesList() {
 								<td>{item?.description}</td>
 								<td>{item?.category[0]?.name}</td>
 								<td>{item?.tag.name}</td>
-								{userData?.userGroup == "SuperAdmin" ? (
+								{loginData?.userGroup == "SuperAdmin" ? (
 									<td>
 										<i
 											role="button"
@@ -509,7 +493,7 @@ export default function RecipesList() {
 								) : (
 									""
 								)}
-								{userData?.userGroup == "SystemUser" ? (
+								{loginData?.userGroup == "SystemUser" ? (
 									<td>
 										<i
 											role="button"

@@ -2,6 +2,23 @@
   text-decoration: none !important;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(46, 158, 100);
+}
+
+::-webkit-scrollbar-track {
+  background: #dbfdd9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #009247;
+  cursor: pointer;
+}
+
 .auth-container {
   background-image: url(./assets/images/auth-bg.png);
 }
@@ -40,13 +57,12 @@
 } */
 
 /* TODO: put an active class when clicked */
-/* Todo => .sidebar-container .ps-sidebar-container>.ps-menu-button:not(:first-child):hover */
-/* TODO: not(1) on hover didn't work properly to disable the background color on hover on logo */
 .sidebar-container .ps-sidebar-container .ps-menu-button:hover {
   background-color: rgba(47, 140, 96, .4);
 }
 
-.sidebar-container .ps-sidebar-container .ps-menu-button:hover:not(:first-child) {
+
+.sidebarLogo .ps-menu-button:hover {
   background-color: transparent !important;
 }
 

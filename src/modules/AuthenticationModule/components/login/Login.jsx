@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ToastContext } from "../../../../context/ToastContext";
+import { AuthContext } from "../../../../context/AuthContex";
 
-export default function Login({ saveLoginData }) {
+export default function Login() {
+	const { saveLoginData } = useContext(AuthContext);
+	let { getToastValue } = useContext(ToastContext);
 	const [showPassword, setShowPassword] = useState(false);
 
 	const togglePasswordVisibility = () => {
@@ -29,11 +32,10 @@ export default function Login({ saveLoginData }) {
 			);
 			localStorage.setItem("token", response.data.token);
 			saveLoginData();
-			// console.log(response.data.token);
-			toast.success("Logged in successfully");
+			getToastValue("success", "Logged in successfully");
 			navigate("/dashboard");
 		} catch (error) {
-			toast.error(error.response.data.message);
+			getToastValue("error", error.response.data.message);
 		}
 	};
 	return (

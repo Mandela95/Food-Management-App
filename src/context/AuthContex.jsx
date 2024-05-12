@@ -1,8 +1,3 @@
-// Todo: shared context of data shared
-// baseUrl
-// header authorization
-// logic of login data and jwt
-//
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 

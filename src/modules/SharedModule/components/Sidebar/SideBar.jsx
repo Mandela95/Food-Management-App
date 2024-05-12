@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toggler from "../../../../assets/images/3.png";
 
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import ChangePassword from "../../../AuthenticationModule/components/changePassword/ChangePassword";
-export default function SideBar({ loginData }) {
+import { AuthContext } from "../../../../context/AuthContex";
+export default function SideBar() {
+	const { loginData } = useContext(AuthContext);
 	const [isCollapse, setIsCollapse] = useState(false);
 	const toggleCollapse = () => {
 		setIsCollapse(!isCollapse);

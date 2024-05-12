@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "../../../SharedModule/components/Header/Header";
 import categoriesImg from "../../../../assets/images/recipes.png";
 import axios from "axios";
@@ -14,17 +14,28 @@ export default function CategoriesList() {
 	const [categoriesList, setCategoriesList] = useState([]);
 
 	const [show, setShow] = useState(false);
-	const [categoryId, setcategoryId] = useState();
+	const [categoryId, setCategoryId] = useState();
 
-	const handleClose = () => setShow(false);
+	const handleClose = () => {
+		// resetting the values to default after closing the modal
+		setNameCategory(null);
+		setCategoryId(null);
+		setCheckIsUpdate(false);
+		setShow(false);
+		setValue("name", "");
+	};
+
 	const handleShow = () => setShow(true);
 	const [nameValue, setNameValue] = useState("");
 	const [arrayOfPages, setArrayOfPages] = useState([]);
 
+	const [nameCategory, setNameCategory] = useState(null);
+	const [checkIsUpdate, setCheckIsUpdate] = useState(false);
+
 	const [showDelete, setShowDelete] = useState(false);
 	const handleDeleteClose = () => setShowDelete(false);
 	const handleDeleteShow = (id) => {
-		setcategoryId(id);
+		setCategoryId(id);
 		setShowDelete(true);
 	};
 
@@ -32,19 +43,19 @@ export default function CategoriesList() {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 	} = useForm();
 
 	//⭐ add new category Crud - create⭐
-	const onSubmit = async (data) => {
+	const onAddSubmit = async (data) => {
+		handleClose();
 		try {
 			let response = await axios.post(`${baseUrl}/Category`, data, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
+				headers: requestHeaders,
 			});
-			handleClose();
-			getCategoriesList();
+			getCategoriesList(nameValue, 10);
 			toast.success("Category Has been added successfully");
+			setValue("name", "");
 			console.log(response);
 		} catch (error) {
 			console.log(error);
@@ -80,29 +91,41 @@ export default function CategoriesList() {
 			});
 			handleDeleteClose();
 			toast.success("Category deleted successfully");
-			getCategoriesList();
+			getCategoriesList(nameValue, 10);
+			console.log(response);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
+	const handleUpdate = (id, name) => {
+		// invoke the function to show modal add and edit
+		setShow(true);
+		// set the values to handle  them in the update process
+		setCategoryId(id);
+		setNameCategory(name);
+		setCheckIsUpdate(true);
+		setValue("name", name);
+	};
+
 	//⭐ update category crUd - update⭐
-	// const updateCategoryList = async () => {
-	// 	try {
-	// 		let response = await axios.put(
-	// 			`${baseUrl}/Category/${categoryId}`,
-	// 			{},
-	// 			{
-	// 				headers: requestHeaders,
-	// 			}
-	// 		);
-	// 		handleClose();
-	// 		getCategoriesList();
-	// 		toast.success("Category updated successfully");
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
+	const onUpdateSubmit = async (data) => {
+		try {
+			let response = await axios.put(
+				`${baseUrl}/Category/${categoryId}`,
+				data,
+				{
+					headers: requestHeaders,
+				}
+			);
+			handleClose();
+			toast.success("Category updated successfully");
+			getCategoriesList(nameValue, 10);
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const getNameValue = (input) => {
 		setNameValue(input.target.value);
@@ -121,10 +144,16 @@ export default function CategoriesList() {
 			/>
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header className="mb-4 border-bottom-0" closeButton>
-					<Modal.Title>Add Category</Modal.Title>
+					<Modal.Title>
+						{checkIsUpdate ? "Update Category" : "Add Category"}
+					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form onSubmit={handleSubmit(onSubmit)}>
+					<form
+						onSubmit={handleSubmit(
+							!checkIsUpdate ? onAddSubmit : onUpdateSubmit
+						)}
+					>
 						<div className="input-group">
 							<input
 								type="text"
@@ -140,11 +169,8 @@ export default function CategoriesList() {
 								{errors.name.message}
 							</p>
 						)}
-						<button
-							onClick={handleClose}
-							className="mt-5 float-end btn btn-success"
-						>
-							Save
+						<button className="mt-5 float-end btn btn-success">
+							{checkIsUpdate ? "Update" : "Save"}
 						</button>
 					</form>
 				</Modal.Body>
@@ -157,7 +183,7 @@ export default function CategoriesList() {
 					<DeleteData deleteItem={"Category"} />
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="outline-danger" onClick={onDeleteSubmit}>
+					<Button variant="outline-danger" onClick={() => onDeleteSubmit()}>
 						Delete this item
 					</Button>
 				</Modal.Footer>
@@ -206,13 +232,21 @@ export default function CategoriesList() {
 							<tr key={item.id}>
 								<th scope="row">{index + 1}</th>
 								<td>{item.name}</td>
-								<td>{new Date(item.creationDate).toDateString()}</td>
+								<td>
+									{new Date(item.creationDate).toLocaleString("en-US", {
+										year: "numeric",
+										month: "long",
+										day: "numeric",
+										hour: "2-digit",
+										minute: "2-digit",
+									})}
+								</td>
 								<td>
 									<i
 										role="button"
 										className="mx-2 fa fa-edit text-info"
 										title="edit"
-										onClick={handleShow}
+										onClick={() => handleUpdate(item.id, item.name)}
 									></i>
 									<i
 										role="button"
