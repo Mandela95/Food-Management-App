@@ -2,6 +2,7 @@ import "./App.css";
 
 import {
 	createBrowserRouter,
+	createHashRouter,
 	Navigate,
 	RouterProvider,
 } from "react-router-dom";
@@ -27,7 +28,7 @@ import { AuthContext } from "./context/AuthContex";
 function App() {
 	let { loginData, saveLoginData } = useContext(AuthContext);
 	// could be router like documentation or routes
-	const routes = createBrowserRouter([
+	const routes = createHashRouter([
 		{
 			path: "dashboard",
 			element: (
