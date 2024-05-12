@@ -1,11 +1,6 @@
 import "./App.css";
 
-import {
-	createBrowserRouter,
-	createHashRouter,
-	Navigate,
-	RouterProvider,
-} from "react-router-dom";
+import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import ForgetPass from "./modules/AuthenticationModule/components/forgetpass/ForgetPass";
 import Login from "./modules/AuthenticationModule/components/login/Login";
