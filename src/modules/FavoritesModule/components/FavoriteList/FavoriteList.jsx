@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../../SharedModule/components/Header/Header";
 import favoritesImg from "../../../../assets/images/header.png";
 import NoData from "../../../SharedModule/components/NoData/NoData";
@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 
 export default function FavoriteList() {
 	let [favsList, setFavsList] = useState([]);
-	const [recipeId, setRecipeId] = useState();
 
 	const baseUrl = "https://upskilling-egypt.com:3006/";
 	const getFavsList = async () => {
@@ -28,7 +27,6 @@ export default function FavoriteList() {
 
 	const removeFromFavorite = async (fav) => {
 		try {
-			const recipeId = fav.recipe.id;
 			let response = await axios.delete(
 				`https://upskilling-egypt.com:3006/api/v1/userRecipe/${fav.id}`,
 				{
@@ -101,11 +99,11 @@ export default function FavoriteList() {
 											data-placement="top"
 											title="Remove from Favourites"
 										>
-											<i className="fa fa-heart text-success"></i>
+											<i role="button" className="fa fa-heart text-success"></i>
 										</div>
 									</div>
-									<h6 className="m-3">{fav.recipe.name}</h6>
-									<p className="m-3">{fav.recipe.description}</p>
+									<h6 className="m-3">{`Name: ${fav.recipe.name}`}</h6>
+									<p className="m-3">{`Description: ${fav.recipe.description}`}</p>
 								</div>
 							</div>
 						))

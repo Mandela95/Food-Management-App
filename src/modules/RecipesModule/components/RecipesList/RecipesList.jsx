@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "../../../SharedModule/components/Header/Header";
 import recipesImg from "../../../../assets/images/header.png";
 import NoData from "../../../SharedModule/components/NoData/NoData";
@@ -44,6 +44,8 @@ export default function RecipesList() {
 	// const [show, setShow] = useState(false);
 	const [SelectedRecipeImage, setSelectedRecipeImage] = useState("");
 	const [SelectedRecipeDesc, setSelectedRecipeDesc] = useState("");
+	const [SelectedRecipeName, setSelectedRecipeName] = useState("");
+	const [SelectedRecipePrice, setSelectedRecipePrice] = useState("");
 	const [SelectedRecipe, setSelectedRecipe] = useState(null);
 	const [showView, setShowView] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -52,6 +54,8 @@ export default function RecipesList() {
 
 	const handleViewShow = (item) => {
 		setSelectedRecipe(item);
+		setSelectedRecipeName(item.name);
+		setSelectedRecipePrice(item.price);
 		setSelectedRecipeImage(
 			"https://upskilling-egypt.com:3006/" + item.imagePath
 		);
@@ -70,8 +74,7 @@ export default function RecipesList() {
 					headers: requestHeaders,
 				}
 			);
-			toast.success("Added to Favourites");
-			console.log("Recipe Added To Favorite Successfully!");
+			toast.success("Recipe Added to Favourites Successfully");
 		} catch (error) {
 			console.error("Error favoriting recipe:", error);
 		} finally {
@@ -160,6 +163,7 @@ export default function RecipesList() {
 			let response = await axios.delete(`${baseUrl}/Recipe/${recipeId}`, {
 				headers: requestHeaders,
 			});
+			console.log(response);
 			handleDeleteClose();
 			toast.success(`Category deleted successfully`);
 			getRecipesList();
@@ -239,9 +243,7 @@ export default function RecipesList() {
 					</Button>
 				</Modal.Footer>
 			</Modal>
-
 			{/* Modal for update */}
-
 			<Modal show={showUpdate} onHide={handleUpdateClose}>
 				<Modal.Header closeButton>
 					<h3>Update Recipe</h3>
@@ -357,7 +359,6 @@ export default function RecipesList() {
 			</Modal>
 
 			{/* view modal for users favorites */}
-
 			<Modal show={showView} onHide={handleViewClose}>
 				<Modal.Header closeButton>
 					<h3>Recipe Details</h3>
@@ -369,7 +370,9 @@ export default function RecipesList() {
 							src={SelectedRecipeImage}
 							alt="Recipe Image"
 						/>
-						<p className="">{SelectedRecipeDesc}</p>
+						<p className="">{`Recipe Name: ${SelectedRecipeName}`}</p>
+						<p className="">{`Recipe Description: ${SelectedRecipeDesc}`}</p>
+						<p className="">{`Recipe Price: ${SelectedRecipePrice} LE`}</p>
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
@@ -382,6 +385,7 @@ export default function RecipesList() {
 					</button>
 				</Modal.Footer>
 			</Modal>
+
 			<div className="container">
 				<div className="row">
 					<div className="p-3 col-6">
@@ -399,9 +403,7 @@ export default function RecipesList() {
 					</div>
 				</div>
 			</div>
-
 			{/* search inputs - filtration */}
-
 			<div className="my-3 filtration">
 				<div className="row">
 					<div className="col-md-6">
@@ -515,7 +517,6 @@ export default function RecipesList() {
 					)}
 				</tbody>
 			</table>
-
 			{/* pagination */}
 			<nav
 				className="my-2 d-flex justify-content-center"
