@@ -2,12 +2,12 @@ import { useContext, useState } from "react";
 import toggler from "../../../../assets/images/3.png";
 
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import ChangePassword from "../../../AuthenticationModule/components/changePassword/ChangePassword";
 import { AuthContext } from "../../../../context/AuthContex";
 export default function SideBar() {
-	const { loginData } = useContext(AuthContext);
+	const { loginData, logout } = useContext(AuthContext);
 	const [isCollapse, setIsCollapse] = useState(false);
 	const toggleCollapse = () => {
 		setIsCollapse(!isCollapse);
@@ -15,17 +15,11 @@ export default function SideBar() {
 
 	console.log(loginData);
 
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-
-	function logout() {
-		localStorage.removeItem("token");
-		localStorage.removeItem("userData");
-		navigate("/login");
-	}
 
 	return (
 		<>

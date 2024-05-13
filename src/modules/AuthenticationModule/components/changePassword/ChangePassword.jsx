@@ -3,8 +3,11 @@ import logo from "../../../../assets/images/logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ChangePassword() {
+	const navigate = useNavigate();
+
 	const [showOldPassword, setShowOldPassword] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -43,11 +46,11 @@ export default function ChangePassword() {
 					},
 				}
 			);
-			// logoutProp();
 			toast.success("New Password Has been updated successfully");
+			navigate("/login");
 			console.log(response);
 		} catch (error) {
-			toast.error(error.response.data.message);
+			toast.error(error.response);
 		}
 	};
 
