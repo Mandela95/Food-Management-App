@@ -364,12 +364,14 @@ export default function RecipesList() {
 					<h3>Recipe Details</h3>
 				</Modal.Header>
 				<Modal.Body>
-					<div className="text-center">
+					<div className="text-center my-3">
 						<img
 							className="rounded w-50 mb-md-3"
 							src={SelectedRecipeImage}
 							alt="Recipe Image"
 						/>
+					</div>
+					<div>
 						<p className="">{`Recipe Name: ${SelectedRecipeName}`}</p>
 						<p className="">{`Recipe Description: ${SelectedRecipeDesc}`}</p>
 						<p className="">{`Recipe Price: ${SelectedRecipePrice} LE`}</p>
