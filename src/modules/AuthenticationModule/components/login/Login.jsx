@@ -22,7 +22,12 @@ export default function Login() {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm();
+	} = useForm({
+		defaultValues: {
+			email: "mohamedelseady247@gmail.com",
+			password: "Test@123"
+		}
+	});
 
 	const onSubmit = async (data) => {
 		try {

@@ -9,7 +9,7 @@ export default function FavoriteList() {
 	let [favsList, setFavsList] = useState([]);
 
 	const baseUrl = "https://upskilling-egypt.com:3006/";
-	const getFavsList = async () => {
+	const getFavoritesList = async () => {
 		try {
 			let response = await axios.get(
 				`https://upskilling-egypt.com:3006/api/v1/userRecipe/?pageSize=10&pageNumber=1`,
@@ -27,7 +27,7 @@ export default function FavoriteList() {
 
 	const removeFromFavorite = async (fav) => {
 		try {
-			let response = await axios.delete(
+			await axios.delete(
 				`https://upskilling-egypt.com:3006/api/v1/userRecipe/${fav.id}`,
 				{
 					headers: {
@@ -35,16 +35,15 @@ export default function FavoriteList() {
 					},
 				}
 			);
-			toast.success("Recipe Removed from Favourites");
-			console.log(response);
-			getFavsList();
+			toast.success("Recipe Removed from Favorites");
+			getFavoritesList();
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	useEffect(() => {
-		getFavsList();
+		getFavoritesList();
 	}, []);
 
 	return (

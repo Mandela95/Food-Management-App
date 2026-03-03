@@ -426,7 +426,8 @@ export default function RecipesList() {
 						</>
 					)}
 				</Modal.Body>
-				<Modal.Footer>					<button
+				<Modal.Footer>
+					<button
 						onClick={onViewSubmit}
 						className="btn btn-success w-100"
 						disabled={loading}
@@ -545,19 +546,19 @@ export default function RecipesList() {
 								<td>{item?.description}</td>
 								<td>{item?.category[0]?.name}</td>
 								<td>{item?.tag.name}</td>
-								{loginData?.userGroup == "SuperAdmin" ? (									<td>
-										<i
-											role="button"
-											className="me-3 fa fa-edit text-info"
-											title="edit"
-											onClick={() => handleUpdateShow(item)}
-										></i>
-										<i
-											role="button"
-											className="text-danger fa fa-trash"
-											title="delete"
-											onClick={() => handleDeleteShow(item.id)}
-										></i>
+								{loginData?.userGroup == "SuperAdmin" ? (					<td>
+									<i
+										role="button"
+										className="me-3 fa fa-edit text-info"
+										title="edit"
+										onClick={() => handleUpdateShow(item)}
+									></i>
+									<i
+										role="button"
+										className="text-danger fa fa-trash"
+										title="delete"
+										onClick={() => handleDeleteShow(item.id)}
+									></i>
 									</td>
 								) : (
 									""
@@ -571,7 +572,7 @@ export default function RecipesList() {
 											aria-hidden="true"
 											title="View"
 										></i>
-									</td>
+								</td>
 								) : (
 									""
 								)}

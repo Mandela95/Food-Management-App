@@ -97,6 +97,7 @@ export default function ChangePassword() {
 						<i className="fa fa-lock"></i>
 					</span>
 					<input
+					disabled
 						type={showPassword ? "text" : "password"}
 						className="form-control"
 						placeholder="New Password"
@@ -127,6 +128,7 @@ export default function ChangePassword() {
 						<i className="fa fa-lock"></i>
 					</span>
 					<input
+						disabled
 						type={showConfirmPassword ? "text" : "password"}
 						className="form-control"
 						placeholder="Confirm New Password"
