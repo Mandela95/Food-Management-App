@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "../../../../assets/images/logo.png";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -28,7 +27,7 @@ export default function Register() {
 	const onSubmit = async (data) => {
 		let registerFormData = appendToFormData(data);
 		try {
-			let response = await axios.post(
+			await axios.post(
 				"https://upskilling-egypt.com:3006/api/v1/Users/Register",
 				registerFormData
 			);

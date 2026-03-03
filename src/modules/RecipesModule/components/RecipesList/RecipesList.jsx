@@ -11,8 +11,8 @@ import DeleteData from "../../../SharedModule/components/DeleteData/DeleteData";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../../../../context/AuthContex";
-useNavigate;
+import { AuthContext } from "../../../../context/AuthContext";
+import ResponsivePagination from "react-responsive-pagination";
 
 export default function RecipesList() {
 	let { loginData, requestHeaders, baseUrl } = useContext(AuthContext);
@@ -26,7 +26,8 @@ export default function RecipesList() {
 	const [catValue, setCatValue] = useState("");
 	const [tagValue, setTagValue] = useState("");
 
-	const [arrayOfPages, setArrayOfPages] = useState([]);
+	const [pageNumber, setPageNumber] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 
 	const [showDelete, setShowDelete] = useState(false);
 
@@ -34,42 +35,48 @@ export default function RecipesList() {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 	} = useForm();
 
 	const handleDeleteClose = () => setShowDelete(false);
 	const handleDeleteShow = (id) => {
 		setRecipeId(id);
 		setShowDelete(true);
-	};
-	// const [show, setShow] = useState(false);
-	const [SelectedRecipeImage, setSelectedRecipeImage] = useState("");
-	const [SelectedRecipeDesc, setSelectedRecipeDesc] = useState("");
-	const [SelectedRecipeName, setSelectedRecipeName] = useState("");
-	const [SelectedRecipePrice, setSelectedRecipePrice] = useState("");
+	};	// const [show, setShow] = useState(false);
 	const [SelectedRecipe, setSelectedRecipe] = useState(null);
 	const [showView, setShowView] = useState(false);
 	const [loading, setLoading] = useState(false);
+	
+	// Image preview states
+	const [showImagePreview, setShowImagePreview] = useState(false);
+	const [previewImageSrc, setPreviewImageSrc] = useState("");
 
-	const handleViewClose = () => setShowView(false);
+	const handleViewClose = () => {
+		setShowView(false);
+		setSelectedRecipe(null);
+	};
 
 	const handleViewShow = (item) => {
 		setSelectedRecipe(item);
-		setSelectedRecipeName(item.name);
-		setSelectedRecipePrice(item.price);
-		setSelectedRecipeImage(
-			"https://upskilling-egypt.com:3006/" + item.imagePath
-		);
-		setSelectedRecipeDesc(item.description);
-		setRecipeId(item.id);
 		setShowView(true);
 	};
-
+	
+	// Image preview functions
+	const handleImagePreview = (imageSrc) => {
+		setPreviewImageSrc(imageSrc);
+		setShowImagePreview(true);
+	};
+	
+	const handleImagePreviewClose = () => {
+		setShowImagePreview(false);
+		setPreviewImageSrc("");
+	};
 	const onViewSubmit = async () => {
 		try {
 			setLoading(true);
 			await axios.post(
 				`${baseUrl}/userRecipe/`,
-				{ recipeId: recipeId },
+				{ recipeId: SelectedRecipe.id },
 				{
 					headers: requestHeaders,
 				}
@@ -81,17 +88,30 @@ export default function RecipesList() {
 			setLoading(false);
 			handleViewClose();
 		}
+	};const [showUpdate, setShowUpdate] = useState(false);
+	const [currentEditingRecipe, setCurrentEditingRecipe] = useState(null);
+	
+	const handleUpdateClose = () => {
+		setShowUpdate(false);
+		setCurrentEditingRecipe(null);
+		// Reset form values
+		setValue("name", "");
+		setValue("description", "");
+		setValue("price", "");
+		setValue("tagId", "");
+		setValue("categoriesIds", "");
 	};
-
-	const [showUpdate, setShowUpdate] = useState(false);
-	const handleUpdateClose = () => setShowUpdate(false);
+	
 	const handleUpdateShow = (item) => {
-		setRecipeId(item);
+		setRecipeId(item.id);
+		setCurrentEditingRecipe(item);
+		setValue("name", item.name);
+		setValue("description", item.description);
+		setValue("price", item.price);
+		setValue("tagId", item.tag.id);
+		setValue("categoriesIds", item.category[0]?.id);
 		setShowUpdate(true);
 	};
-
-	// const handleClose = () => setShow(false);
-	// const handleShow = () => setShow(true);
 
 	const goToRecipeData = () => {
 		navigate("/dashboard/recipeData");
@@ -111,19 +131,14 @@ export default function RecipesList() {
 					},
 				}
 			);
-			setArrayOfPages(
-				Array(response.data.totalNumberOfPages)
-					.fill()
-					.map((_, i) => i + 1)
-			);
-			console.log(arrayOfPages);
+			setTotalPages(response.data.totalNumberOfPages);
+			console.log(response.data.totalNumberOfPages);
 			// console.log(response.data.data);
 			setRecipesList(response.data.data);
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
 	//AppendToUpdate
 	const appendToFormData = (data) => {
 		const formData = new FormData();
@@ -131,11 +146,13 @@ export default function RecipesList() {
 		formData.append("description", data.description);
 		formData.append("price", data.price);
 		formData.append("tagId", data.tagId);
-		formData.append("recipeImage", data.recipeImage[0]);
+		// Only append image if a new one is selected
+		if (data.recipeImage && data.recipeImage.length > 0) {
+			formData.append("recipeImage", data.recipeImage[0]);
+		}
 		formData.append("categoriesIds", data.categoriesIds);
 		return formData;
 	};
-
 	//Todo: handle update submit
 	const onUpdateSubmit = async (data) => {
 		let recipeFormData = appendToFormData(data);
@@ -149,14 +166,13 @@ export default function RecipesList() {
 			);
 			toast.success("Recipe Updated Successfully");
 			handleUpdateClose();
-			getRecipesList();
+			getRecipesList(nameValue, tagValue, catValue, 5, pageNumber);
 			console.log(response);
 		} catch (error) {
 			console.log(error);
 			toast.error(error.response.data.message);
 		}
 	};
-
 	// ⭐ delete recipe cruD - delete⭐
 	const onDeleteSubmit = async () => {
 		try {
@@ -165,8 +181,8 @@ export default function RecipesList() {
 			});
 			console.log(response);
 			handleDeleteClose();
-			toast.success(`Category deleted successfully`);
-			getRecipesList();
+			toast.success(`Recipe deleted successfully`);
+			getRecipesList(nameValue, tagValue, catValue, 5, pageNumber);
 		} catch (error) {
 			console.log(error);
 		}
@@ -220,6 +236,10 @@ export default function RecipesList() {
 		getCategoriesList();
 		getTagsList();
 	}, []);
+
+	useEffect(() => {
+		getRecipesList(nameValue, tagValue, catValue, 5, pageNumber);
+	}, [pageNumber]);
 
 	return (
 		<>
@@ -315,21 +335,45 @@ export default function RecipesList() {
 						</div>
 						{errors.tagId && (
 							<p className="p-2 alert alert-danger">{errors.tagId.message}</p>
-						)}
-
-						<div className="mb-2 input-group">
+						)}						<div className="mb-2 input-group">
 							<input
 								type="file"
 								className="form-control bg-light"
-								{...register("recipeImage", {
-									required: "Image is required",
-								})}
+								{...register("recipeImage")}
 							/>
-						</div>
-						{errors.recipeImage && (
-							<p className="p-2 alert alert-danger">
-								{errors.recipeImage.message}
-							</p>
+						</div>						{/* Display current image */}
+						{currentEditingRecipe && (
+							<div className="mb-2 text-center">
+								<p className="text-muted mb-2">Current Image:</p>
+								{currentEditingRecipe.imagePath ? (
+									<>
+										<img
+											src={`https://upskilling-egypt.com:3006/${currentEditingRecipe.imagePath}`}
+											alt="Current recipe"
+											className="img-thumbnail"
+											style={{ width: '150px', height: '150px', objectFit: 'cover', cursor: 'pointer' }}
+											onClick={() => handleImagePreview(
+												`https://upskilling-egypt.com:3006/${currentEditingRecipe.imagePath}`
+											)}
+										/>
+										<div className="mt-1">
+											<small className="text-muted">Click image to preview • Upload a new image to replace it</small>
+										</div>
+									</>
+								) : (
+									<>
+										<img
+											src={noDataImg}
+											alt="No image available"
+											className="img-thumbnail"
+											style={{ width: '150px', height: '150px', objectFit: 'cover', opacity: 0.6 }}
+										/>
+										<div className="mt-1">
+											<small className="text-muted">No image available • Upload an image to add one</small>
+										</div>
+									</>
+								)}
+							</div>
 						)}
 
 						<div className="mb-2 input-group">
@@ -356,36 +400,54 @@ export default function RecipesList() {
 						<button className="btn btn-success w-100">Update</button>
 					</form>
 				</Modal.Body>
-			</Modal>
-
-			{/* view modal for users favorites */}
+			</Modal>			{/* view modal for users favorites */}
 			<Modal show={showView} onHide={handleViewClose}>
 				<Modal.Header closeButton>
 					<h3>Recipe Details</h3>
 				</Modal.Header>
 				<Modal.Body>
-					<div className="text-center my-3">
-						<img
-							className="rounded w-50 mb-md-3"
-							src={SelectedRecipeImage}
-							alt="Recipe Image"
-						/>
-					</div>
-					<div>
-						<p className="">{`Recipe Name: ${SelectedRecipeName}`}</p>
-						<p className="">{`Recipe Description: ${SelectedRecipeDesc}`}</p>
-						<p className="">{`Recipe Price: ${SelectedRecipePrice} LE`}</p>
-					</div>
+					{SelectedRecipe && (
+						<>
+							<div className="text-center my-3">
+								<img
+									className="rounded w-50 mb-md-3"
+									src={SelectedRecipe.imagePath ? 
+										`https://upskilling-egypt.com:3006/${SelectedRecipe.imagePath}` : 
+										noDataImg
+									}
+									alt="Recipe Image"
+								/>
+							</div>
+							<div>
+								<p className="">{`Recipe Name: ${SelectedRecipe.name}`}</p>
+								<p className="">{`Recipe Description: ${SelectedRecipe.description}`}</p>
+								<p className="">{`Recipe Price: ${SelectedRecipe.price} LE`}</p>
+							</div>
+						</>
+					)}
 				</Modal.Body>
-				<Modal.Footer>
-					<button
+				<Modal.Footer>					<button
 						onClick={onViewSubmit}
 						className="btn btn-success w-100"
 						disabled={loading}
 					>
-						{loading ? "Add To Favorite" : "Favorite"}
+						{loading ? "Adding..." : "Add To Favorite"}
 					</button>
 				</Modal.Footer>
+			</Modal>
+
+			{/* Image Preview Modal */}
+			<Modal show={showImagePreview} onHide={handleImagePreviewClose} size="lg" centered>
+				<Modal.Header closeButton>
+					<h3>Recipe Image</h3>
+				</Modal.Header>
+				<Modal.Body className="text-center">
+					<img
+						src={previewImageSrc}
+						alt="Recipe Preview"
+						style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain' }}
+					/>
+				</Modal.Body>
 			</Modal>
 
 			<div className="container">
@@ -395,12 +457,10 @@ export default function RecipesList() {
 						<span>You can check all details</span>
 					</div>
 					<div className="px-0 py-4 col-6 d-flex justify-content-end">
-						{loginData?.userGroup == "SuperAdmin" ? (
-							<button className="py-3 btn btn-success" onClick={goToRecipeData}>
+						{loginData?.userGroup == "SuperAdmin" && (
+							<button className="py-2 btn btn-success" onClick={goToRecipeData}>
 								Add New Recipe
 							</button>
-						) : (
-							""
 						)}
 					</div>
 				</div>
@@ -438,7 +498,7 @@ export default function RecipesList() {
 					</div>
 				</div>
 			</div>
-			<table className="table p-2 m-1">
+			<table className="table p-2 m-1 text-center">
 				<thead>
 					<tr className="table-row">
 						<th scope="col">No.</th>
@@ -451,13 +511,12 @@ export default function RecipesList() {
 						<th scope="col">Actions</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody className="align-middle">
 					{recipesList.length > 0 ? (
 						recipesList.map((item, index) => (
 							<tr key={item.id}>
 								<th scope="row">{index + 1}</th>
-								<td>{item?.name}</td>
-								<td>
+								<td>{item?.name}</td>								<td>
 									{item?.imagePath ? (
 										<img
 											className="recipeImg"
@@ -465,6 +524,11 @@ export default function RecipesList() {
 											src={
 												"https://upskilling-egypt.com:3006/" + item.imagePath
 											}
+											onClick={() => handleImagePreview(
+												"https://upskilling-egypt.com:3006/" + item.imagePath,
+												item.name
+											)}
+											style={{ cursor: 'pointer' }}
 										/>
 									) : (
 										<img
@@ -472,6 +536,8 @@ export default function RecipesList() {
 											src={noDataImg}
 											alt="No Img"
 											title="default img"
+											onClick={() => handleImagePreview(noDataImg, item.name)}
+											style={{ cursor: 'pointer' }}
 										/>
 									)}
 								</td>
@@ -479,13 +545,12 @@ export default function RecipesList() {
 								<td>{item?.description}</td>
 								<td>{item?.category[0]?.name}</td>
 								<td>{item?.tag.name}</td>
-								{loginData?.userGroup == "SuperAdmin" ? (
-									<td>
+								{loginData?.userGroup == "SuperAdmin" ? (									<td>
 										<i
 											role="button"
 											className="me-3 fa fa-edit text-info"
 											title="edit"
-											onClick={() => handleUpdateShow(item.id)}
+											onClick={() => handleUpdateShow(item)}
 										></i>
 										<i
 											role="button"
@@ -513,43 +578,19 @@ export default function RecipesList() {
 							</tr>
 						))
 					) : (
-						<td colSpan={4}>
+						<td colSpan={8}>
 							<NoData />
 						</td>
 					)}
 				</tbody>
-			</table>
-			{/* pagination */}
-			<nav
-				className="my-2 d-flex justify-content-center"
-				aria-label="Page navigation example"
-			>
-				<ul role="button" className="pagination">
-					<li className="page-item">
-						<a className="page-link" aria-label="Previous" title="Previous">
-							<span aria-hidden="true">&laquo;</span>
-						</a>
-					</li>
-					{arrayOfPages.map((pageNumber) => (
-						<li
-							// Todo: key here
-							key={pageNumber}
-							className="page-item"
-							onClick={() =>
-								getRecipesList(nameValue, tagValue, catValue, 5, pageNumber)
-							}
-						>
-							<a className="page-link">{pageNumber}</a>
-						</li>
-					))}
-					{/* Todo: handle arrows */}
-					<li className="page-item">
-						<a className="page-link" aria-label="Next" title="Next">
-							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-				</ul>
-			</nav>
+			</table>			{/* pagination */}
+			<div className="my-2 d-flex justify-content-center">
+				<ResponsivePagination
+					current={pageNumber}
+					total={totalPages}
+					onPageChange={setPageNumber}
+				/>
+			</div>
 		</>
 	);
 }

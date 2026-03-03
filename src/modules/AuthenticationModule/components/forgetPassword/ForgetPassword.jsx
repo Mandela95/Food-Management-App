@@ -1,11 +1,10 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import logo from "../../../../assets/images/logo.png";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function ForgetPass({ saveLoginData }) {
+export default function ForgetPassword({ saveLoginData }) {
 	const navigate = useNavigate();
 
 	const {
@@ -16,7 +15,7 @@ export default function ForgetPass({ saveLoginData }) {
 
 	const onSubmit = async (data) => {
 		try {
-			let response = await axios.post(
+			await axios.post(
 				"https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request",
 				data
 			);

@@ -8,7 +8,8 @@ import Modal from "react-bootstrap/Modal";
 import { useForm } from "react-hook-form";
 import DeleteData from "../../../SharedModule/components/DeleteData/DeleteData";
 import { toast } from "react-toastify";
-import { AuthContext } from "../../../../context/AuthContex";
+import { AuthContext } from "../../../../context/AuthContext";
+import ResponsivePagination from "react-responsive-pagination";
 export default function CategoriesList() {
 	let { requestHeaders, baseUrl } = useContext(AuthContext);
 	const [categoriesList, setCategoriesList] = useState([]);
@@ -27,7 +28,8 @@ export default function CategoriesList() {
 
 	const handleShow = () => setShow(true);
 	const [nameValue, setNameValue] = useState("");
-	const [arrayOfPages, setArrayOfPages] = useState([]);
+	const [pageNumber, setPageNumber] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 
 	const [nameCategory, setNameCategory] = useState(null);
 	const [checkIsUpdate, setCheckIsUpdate] = useState(false);
@@ -72,11 +74,7 @@ export default function CategoriesList() {
 					params: { name: name },
 				}
 			);
-			setArrayOfPages(
-				Array(response.data.totalNumberOfPages)
-					.fill()
-					.map((_, i) => i + 1)
-			);
+			setTotalPages(response.data.totalNumberOfPages);
 			setCategoriesList(response.data.data);
 		} catch (error) {
 			console.log(error);
@@ -135,6 +133,10 @@ export default function CategoriesList() {
 	useEffect(() => {
 		getCategoriesList("", 10, 1);
 	}, []);
+
+	useEffect(() => {
+		getCategoriesList(nameValue, 10, pageNumber);
+	}, [pageNumber]);
 	return (
 		<>
 			<Header
@@ -195,7 +197,7 @@ export default function CategoriesList() {
 						<span>You can check all details</span>
 					</div>
 					<div className="px-0 py-4 col-6 d-flex justify-content-end">
-						<button onClick={handleShow} className="py-3 btn btn-success">
+						<button onClick={handleShow} className="py-2 btn btn-success">
 							Add New Category
 						</button>
 					</div>
@@ -217,7 +219,7 @@ export default function CategoriesList() {
 				</div>
 			</div>
 
-			<table className="table p-2 m-1">
+			<table className="table p-2 m-1 text-center">
 				<thead>
 					<tr className="table-row">
 						<th scope="col">No.</th>
@@ -263,37 +265,14 @@ export default function CategoriesList() {
 						</td>
 					)}
 				</tbody>
-			</table>
-
-			{/* pagination */}
-
-			<nav
-				className="my-2 d-flex justify-content-center"
-				aria-label="Page navigation example"
-			>
-				<ul role="button" className="pagination pointer">
-					<li className="page-item">
-						<a className="page-link" aria-label="Previous" title="Previous">
-							<span aria-hidden="true">&laquo;</span>
-						</a>
-					</li>
-					{arrayOfPages.map((pageNumber) => (
-						<li
-							key={pageNumber}
-							className="page-item"
-							onClick={() => getCategoriesList(nameValue, 10, pageNumber)}
-						>
-							<a className="page-link">{pageNumber}</a>
-						</li>
-					))}
-					{/* // Todo: handle arrows prev and next */}
-					<li className="page-item">
-						<a className="page-link" aria-label="Next" title="Next">
-							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-				</ul>
-			</nav>
+			</table>			{/* pagination */}
+			<div className="my-2 d-flex justify-content-center">
+				<ResponsivePagination
+					current={pageNumber}
+					total={totalPages}
+					onPageChange={setPageNumber}
+				/>
+			</div>
 		</>
 	);
 }

@@ -2,10 +2,10 @@ import "./App.css";
 
 import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import ForgetPass from "./modules/AuthenticationModule/components/forgetpass/ForgetPass";
+import ForgetPassword from "./modules/AuthenticationModule/components/forgetPassword/ForgetPassword";
 import Login from "./modules/AuthenticationModule/components/login/Login";
 import Register from "./modules/AuthenticationModule/components/register/Register";
-import ResetPass from "./modules/AuthenticationModule/components/resetpass/ResetPass";
+import ResetPassword from "./modules/AuthenticationModule/components/resetPassword/ResetPassword";
 import CategoriesList from "./modules/CategoriesModule/components/CategoriesList/CategoriesList";
 import Dashboard from "./modules/HomeModule/components/Dashboard/Dashboard";
 import RecipesList from "./modules/RecipesModule/components/RecipesList/RecipesList";
@@ -18,7 +18,7 @@ import RecipeData from "./modules/RecipesModule/components/RecipeData/RecipeData
 import VerifyAccount from "./modules/AuthenticationModule/components/VerifyAccount/VerifyAccount";
 import FavoriteList from "./modules/FavoritesModule/components/FavoriteList/FavoriteList";
 import { useContext } from "react";
-import { AuthContext } from "./context/AuthContex";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
 	let { loginData, saveLoginData } = useContext(AuthContext);
@@ -76,8 +76,8 @@ function App() {
 				{ path: "", element: <Login saveLoginData={saveLoginData} /> },
 				{ path: "login", element: <Login saveLoginData={saveLoginData} /> },
 				{ path: "register", element: <Register /> },
-				{ path: "forgetpass", element: <ForgetPass /> },
-				{ path: "resetpass", element: <ResetPass /> },
+				{ path: "forgetPassword", element: <ForgetPassword /> },
+				{ path: "resetPassword", element: <ResetPassword /> },
 				{ path: "verifyAccount", element: <VerifyAccount /> },
 			],
 		},

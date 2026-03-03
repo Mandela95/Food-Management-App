@@ -4,7 +4,7 @@ import NoData from "../../../SharedModule/components/NoData/NoData";
 import noDataImg from "../../../../assets/images/no-data.png";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "../../../../context/AuthContex";
+import { AuthContext } from "../../../../context/AuthContext";
 import Modal from "react-bootstrap/Modal";
 import { ModalFooter } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -17,7 +17,6 @@ export default function UsersList() {
 	const [EmailValue, setEmailValue] = useState("");
 	const [CountryValue, setCountryValue] = useState("");
 	const [GroupValue, setGroupValue] = useState("");
-	// const [ArrayOfPages, setArrayOfPages] = useState([]);
 
 	const [pageNumber, setPageNumber] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
@@ -66,7 +65,7 @@ export default function UsersList() {
 	// function for delete category to the server
 	const onDeleteSubmit = async () => {
 		try {
-			const response = await axios.delete(`${baseUrl}/Users/${userId}`, {
+			await axios.delete(`${baseUrl}/Users/${userId}`, {
 				headers: requestHeaders,
 			});
 			handleCloseDelete();
@@ -123,7 +122,6 @@ export default function UsersList() {
 		setGroupValue(input.target.value);
 		getUsersList(UserNameValue, EmailValue, CountryValue, input.target.value);
 	};
-
 	useEffect(() => {
 		getUsersList("", "", "", "", 10, 1);
 	}, [pageNumber]);
@@ -244,7 +242,7 @@ export default function UsersList() {
 				</div>
 
 				<br />
-				<table className="table table-hover">
+				<table className="table table-hover text-center">
 					<thead>
 						<tr className="table-secondary">
 							<th scope="col">#</th>
@@ -301,45 +299,6 @@ export default function UsersList() {
 						onPageChange={setPageNumber}
 					/>
 				)}
-
-				{/* pagination
-				<nav
-					className="d-flex justify-content-center"
-					aria-label="Page navigation"
-				>
-					<ul role="button" className="pagination">
-						<li className="page-item">
-							<a className="page-link" aria-label="Previous" title="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-
-						{ArrayOfPages.map((pageNo) => (
-							<li
-								key={pageNo}
-								className="page-item"
-								onClick={() =>
-									getUsersList(
-										UserNameValue,
-										EmailValue,
-										CountryValue,
-										GroupValue,
-										10,
-										pageNo
-									)
-								}
-							>
-								<a className="page-link">{pageNo}</a>
-							</li>
-						))}
-
-						<li className="page-item">
-							<a className="page-link" aria-label="Next" title="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav> */}
 			</div>
 		</>
 	);

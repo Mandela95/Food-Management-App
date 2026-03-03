@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useContext, useState } from "react";
 import { ToastContext } from "../../../../context/ToastContext";
-import { AuthContext } from "../../../../context/AuthContex";
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function Login() {
 	const { saveLoginData } = useContext(AuthContext);

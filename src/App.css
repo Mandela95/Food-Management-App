@@ -56,9 +56,15 @@ a {
   position: fixed !important;
 } */
 
-/* TODO: put an active class when clicked */
+/* Active state for sidebar menu items */
 .sidebar-container .ps-sidebar-container .ps-menu-button:hover {
   background-color: rgba(47, 140, 96, .4);
+}
+
+/* Active menu item styling */
+.sidebar-container .ps-sidebar-container .active .ps-menu-button {
+  background-color: rgba(47, 140, 96, .6);
+  border-left: 4px solid #2f8c60;
 }
 
 
@@ -105,6 +111,13 @@ a {
 
 .page-link {
   color: green !important;
+}
+
+/* For ResponsivePagination component */
+.page-item.active .page-link {
+  background-color: #90ee90 !important;
+  border-color: #90ee90 !important;
+  color: #000 !important;
 }
 
 ul.pagination {

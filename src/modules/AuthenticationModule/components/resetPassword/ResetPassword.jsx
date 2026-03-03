@@ -1,11 +1,10 @@
-import React from "react";
 import logo from "../../../../assets/images/logo.png";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-export default function ResetPass() {
+export default function ResetPassword() {
 	const navigate = useNavigate();
 	const {
 		register,
@@ -15,7 +14,7 @@ export default function ResetPass() {
 
 	const onSubmit = async (data) => {
 		try {
-			let response = await axios.post(
+			await axios.post(
 				"https://upskilling-egypt.com:3006/api/v1/Users/Reset",
 				data
 			);

@@ -2,15 +2,24 @@ import { useContext, useState } from "react";
 import toggler from "../../../../assets/images/3.png";
 
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import ChangePassword from "../../../AuthenticationModule/components/changePassword/ChangePassword";
-import { AuthContext } from "../../../../context/AuthContex";
-export default function SideBar() {
+import { AuthContext } from "../../../../context/AuthContext";
+export default function SideBar({ isCollapse, setIsCollapse }) {
 	const { loginData, logout } = useContext(AuthContext);
-	const [isCollapse, setIsCollapse] = useState(false);
+	const location = useLocation();
+	
 	const toggleCollapse = () => {
 		setIsCollapse(!isCollapse);
+	};
+
+	// Check if a route is active
+	const isActive = (path) => {
+		if (path === "/dashboard") {
+			return location.pathname === "/dashboard" || location.pathname === "/dashboard/";
+		}
+		return location.pathname.startsWith(path);
 	};
 
 	console.log(loginData);
@@ -28,8 +37,8 @@ export default function SideBar() {
 					<ChangePassword logoutProp={logout} />
 				</Modal.Body>
 			</Modal>
-			<div className="sidebar-container">
-				<Sidebar collapsed={isCollapse}>
+			<div className="sidebar-container" style={{ position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 1000 }}>
+				<Sidebar collapsed={isCollapse} style={{ border: "none" }}>
 					<Menu
 						menuItemStyles={{
 							button: {
@@ -49,7 +58,7 @@ export default function SideBar() {
 						/>
 						<MenuItem
 							title="Home"
-							className="home"
+							className={`home ${location.pathname === "/dashboard" ? "active" : ""}`}
 							icon={<i className="fa fa-home"></i>}
 							component={<Link to="/dashboard" />}
 						>
@@ -58,6 +67,7 @@ export default function SideBar() {
 						{loginData?.userGroup == "SuperAdmin" ? (
 							<MenuItem
 								title="Users"
+								className={isActive("/dashboard/users") ? "active" : ""}
 								icon={<i className="fas fa-user-friends"></i>}
 								component={<Link to="/dashboard/users" />}
 							>
@@ -68,6 +78,7 @@ export default function SideBar() {
 						)}
 						<MenuItem
 							title="Recipes"
+							className={isActive("/dashboard/recipes") ? "active" : ""}
 							icon={<i className="fas fa-utensils"></i>}
 							component={<Link to="/dashboard/recipes" />}
 						>
@@ -76,6 +87,7 @@ export default function SideBar() {
 						{loginData?.userGroup == "SuperAdmin" ? (
 							<MenuItem
 								title="Categories"
+								className={isActive("/dashboard/categories") ? "active" : ""}
 								icon={<i className="fas fa-calendar-alt"></i>}
 								component={<Link to="/dashboard/categories" />}
 							>
@@ -87,6 +99,7 @@ export default function SideBar() {
 						{loginData?.userGroup == "SystemUser" ? (
 							<MenuItem
 								title="Favorites"
+								className={isActive("/dashboard/favorites") ? "active" : ""}
 								icon={<i className="far fa-heart"></i>}
 								component={<Link to="/dashboard/favorites" />}
 							>

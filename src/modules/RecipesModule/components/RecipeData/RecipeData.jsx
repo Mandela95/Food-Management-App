@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -32,7 +32,7 @@ export default function RecipeData() {
 		//⭐ send recipe form data not only data⭐
 		let recipeFormData = appendToFormData(data);
 		try {
-			let response = await axios.post(
+			await axios.post(
 				"https://upskilling-egypt.com:3006/api/v1/Recipe",
 				recipeFormData,
 				{
@@ -163,7 +163,7 @@ export default function RecipeData() {
 							className="form-control"
 							placeholder="Recipe Description"
 							{...register("description", {
-								required: "Category is required",
+								required: "Description is required",
 							})}
 						/>
 					</div>

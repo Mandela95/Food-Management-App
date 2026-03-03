@@ -1,7 +1,7 @@
 import logo from "../../../../assets/images/logo.png";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,11 +16,10 @@ export default function VerifyAccount() {
 
 	const onSubmit = async (data) => {
 		try {
-			let response = await axios.put(
+			await axios.put(
 				"https://upskilling-egypt.com:3006/api/v1/Users/verify",
 				data
 			);
-			// console.log(response.data.token);
 			toast.success("Account verified successfully");
 			navigate("/login");
 		} catch (error) {

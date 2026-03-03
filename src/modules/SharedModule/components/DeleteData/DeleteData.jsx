@@ -1,4 +1,3 @@
-import React from "react";
 import noDataImg from "../../../../assets/images/no-data.png";
 
 export default function DeleteData({ deleteItem }) {

@@ -1,16 +1,27 @@
-import React from "react";
 import Navbar from "../Navbar/Navbar";
 import { Outlet } from "react-router-dom";
 import SideBar from "../Sidebar/SideBar";
+import { useState } from "react";
 
 export default function MasterLayout({ loginData }) {
+	const [isCollapse, setIsCollapse] = useState(false);
+
 	return (
 		<>
 			<div className="d-flex">
 				<div>
-					<SideBar loginData={loginData} />
+					<SideBar 
+						loginData={loginData} 
+						isCollapse={isCollapse} 
+						setIsCollapse={setIsCollapse} 
+					/>
 				</div>
-				<div className="m-3 vh-100 w-100">
+				<div className="container-fluid vh-100 w-100"
+					style={{ 
+						marginLeft: isCollapse ? '80px' : '250px',
+						transition: 'margin-left 0.3s ease'
+					}}
+				>
 					<Navbar loginData={loginData} />
 					<Outlet />
 				</div>

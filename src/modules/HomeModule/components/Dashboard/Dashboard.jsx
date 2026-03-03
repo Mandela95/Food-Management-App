@@ -2,7 +2,7 @@ import Header from "../../../SharedModule/components/Header/Header";
 import homeAvatar from "../../../../assets/images/home-avatar.svg";
 import RecipesListHeader from "../../../SharedModule/components/RecipesListHeader/RecipesListHeader";
 import { useContext } from "react";
-import { AuthContext } from "../../../../context/AuthContex";
+import { AuthContext } from "../../../../context/AuthContext";
 export default function Dashboard() {
 	let { loginData } = useContext(AuthContext);
 
