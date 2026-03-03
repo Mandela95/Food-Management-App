@@ -127,3 +127,32 @@ ul.pagination {
   margin: 5px;
   justify-content: center;
 }
+
+/* Navbar Profile Dropdown Styles */
+#profile-dropdown::after {
+  display: none; /* Remove default dropdown caret */
+}
+
+#profile-dropdown:hover {
+  background-color: rgba(47, 140, 96, 0.08) !important;
+  border-color: rgba(47, 140, 96, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+#profile-dropdown:focus {
+  box-shadow: 0 0 0 0.2rem rgba(47, 140, 96, 0.25) !important;
+  border-color: rgba(47, 140, 96, 0.5) !important;
+}
+
+.dropdown-menu {
+  min-width: 280px;
+  border-radius: 10px;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(47, 140, 96, 0.1);
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}

@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "ldrs/lineSpinner";
 
@@ -30,12 +29,11 @@ export default function AuthContextProvider(props) {
 		// console.log(decodedToken);
 		setLoginData(decodedToken);
 	};
-
 	function logout() {
 		localStorage.removeItem("token");
 		localStorage.removeItem("userData");
+		setLoginData(null);
 		toast.success("Logged Out successfully");
-		Navigate("/login");
 	}
 
 	useEffect(() => {

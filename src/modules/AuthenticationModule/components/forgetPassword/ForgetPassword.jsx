@@ -27,12 +27,26 @@ export default function ForgetPassword({ saveLoginData }) {
 		}
 	};
 
+	const goBack = () => {
+		navigate("/login");
+	};
+
 	return (
 		<>
 			<div className="auth-container">
 				<div className="container-fluid bg-overlay">
 					<div className="justify-content-center row vh-100 align-items-center">
 						<div className="p-4 bg-white col-md-6 rounded-4">
+							<div className="d-flex align-items-center mb-3">
+								<button 
+									onClick={goBack}
+									className="btn btn-link p-0 text-decoration-none d-flex align-items-center"
+									style={{ color: '#2f8c60' }}
+								>
+									<i className="fas fa-arrow-left me-2"></i>
+									Back to Login
+								</button>
+							</div>
 							<div className="text-center">
 								<img src={logo} alt="" className="w-50" />
 							</div>

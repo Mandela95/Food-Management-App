@@ -119,7 +119,7 @@ export default function Login() {
 										<Link className="text-black" to="/register">
 											Register Now?
 										</Link>
-										<Link className="text-success" to="/forgetpass">
+										<Link className="text-success" to="/ForgetPassword">
 											Forgot Password?
 										</Link>
 									</div>
