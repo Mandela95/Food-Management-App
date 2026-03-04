@@ -12,6 +12,7 @@ The app enables role-based users to manage recipes, categories, and personal fav
 
 ![Food-Management-App(favorites)](https://raw.githubusercontent.com/Mandela95/Food-Management-App/refs/heads/master/favorites.png)
 
+Mobile Screen:
 ![Food-Management-App(Mobile)](https://raw.githubusercontent.com/Mandela95/Food-Management-App/refs/heads/master/mobile.png)
 
 
