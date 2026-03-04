@@ -6,12 +6,21 @@ import { Link, useLocation } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import ChangePassword from "../../../AuthenticationModule/components/changePassword/ChangePassword";
 import { AuthContext } from "../../../../context/AuthContext";
-export default function SideBar({ isCollapse, setIsCollapse }) {
+export default function SideBar({ isCollapse, setIsCollapse, onMobileItemClick, isMobile, showMobileSidebar }) {
 	const { loginData, logout } = useContext(AuthContext);
 	const location = useLocation();
 	
 	const toggleCollapse = () => {
-		setIsCollapse(!isCollapse);
+		if (!isMobile) {
+			setIsCollapse(!isCollapse);
+		}
+	};
+
+	// Handle menu item click on mobile - close sidebar
+	const handleMenuItemClick = () => {
+		if (isMobile && onMobileItemClick) {
+			onMobileItemClick();
+		}
 	};
 
 	// Check if a route is active
@@ -21,8 +30,6 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 		}
 		return location.pathname.startsWith(path);
 	};
-
-	console.log(loginData);
 
 	// const navigate = useNavigate();
 
@@ -37,7 +44,16 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 					<ChangePassword logoutProp={logout} />
 				</Modal.Body>
 			</Modal>
-			<div className="sidebar-container" style={{ position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 1000 }}>
+			<div 
+				className={`sidebar-container ${isMobile && showMobileSidebar ? 'show' : ''}`} 
+				style={{ 
+					position: 'fixed', 
+					top: 0, 
+					left: 0, 
+					height: '100vh', 
+					zIndex: 1000 
+				}}
+			>
 				<Sidebar collapsed={isCollapse} style={{ border: "none" }}>
 					<Menu
 						menuItemStyles={{
@@ -61,6 +77,7 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 							className={`home ${location.pathname === "/dashboard" ? "active" : ""}`}
 							icon={<i className="fa fa-home"></i>}
 							component={<Link to="/dashboard" />}
+							onClick={handleMenuItemClick}
 						>
 							Home
 						</MenuItem>
@@ -70,6 +87,7 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 								className={isActive("/dashboard/users") ? "active" : ""}
 								icon={<i className="fas fa-user-friends"></i>}
 								component={<Link to="/dashboard/users" />}
+								onClick={handleMenuItemClick}
 							>
 								Users
 							</MenuItem>
@@ -81,6 +99,7 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 							className={isActive("/dashboard/recipes") ? "active" : ""}
 							icon={<i className="fas fa-utensils"></i>}
 							component={<Link to="/dashboard/recipes" />}
+							onClick={handleMenuItemClick}
 						>
 							Recipes
 						</MenuItem>
@@ -90,6 +109,7 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 								className={isActive("/dashboard/categories") ? "active" : ""}
 								icon={<i className="fas fa-calendar-alt"></i>}
 								component={<Link to="/dashboard/categories" />}
+								onClick={handleMenuItemClick}
 							>
 								Categories
 							</MenuItem>
@@ -102,6 +122,7 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 								className={isActive("/dashboard/favorites") ? "active" : ""}
 								icon={<i className="far fa-heart"></i>}
 								component={<Link to="/dashboard/favorites" />}
+								onClick={handleMenuItemClick}
 							>
 								Favorites
 							</MenuItem>
@@ -111,7 +132,8 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 						<MenuItem
 							title="Change Password"
 							icon={<i className="fa fa-lock"></i>}
-							onClick={handleShow}
+							onClick={() => { handleMenuItemClick(); handleShow();
+							}}
 						>
 							Change Password
 						</MenuItem>
@@ -119,7 +141,8 @@ export default function SideBar({ isCollapse, setIsCollapse }) {
 							title="Logout"
 							icon={<i className="fas fa-sign-out-alt"></i>}
 							component={<Link to="/login" />}
-							onClick={logout}
+							onClick={() => { handleMenuItemClick(); logout();	
+							}}
 						>
 							Logout
 						</MenuItem>{" "}

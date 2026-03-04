@@ -242,12 +242,9 @@ export default function RecipesList() {
 	}, [pageNumber]);
 
 	return (
-		<>
-			<Header
+		<>			<Header
 				title="Recipes Items"
-				description={
-					"You can now add your items that any user can order it from the Application and you can edit"
-				}
+				description="Discover and manage delicious recipes. You can add new recipes, edit existing ones, and organize them by categories and tags."
 				imageUrl={recipesImg}
 			/>
 			<Modal show={showDelete} onHide={handleDeleteClose}>
@@ -450,14 +447,13 @@ export default function RecipesList() {
 					/>
 				</Modal.Body>
 			</Modal>
-
 			<div className="container">
 				<div className="row">
-					<div className="p-3 col-6">
+					<div className="p-3 col-12 col-md-6">
 						<h4>Recipes Table Details</h4>
 						<span>You can check all details</span>
 					</div>
-					<div className="px-0 py-4 col-6 d-flex justify-content-end">
+					<div className="px-3 py-2 py-md-4 col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
 						{loginData?.userGroup == "SuperAdmin" && (
 							<button className="py-2 btn btn-success" onClick={goToRecipeData}>
 								Add New Recipe
@@ -467,9 +463,9 @@ export default function RecipesList() {
 				</div>
 			</div>
 			{/* search inputs - filtration */}
-			<div className="my-3 filtration">
-				<div className="row">
-					<div className="col-md-6">
+			<div className="my-3 filtration px-2">
+				<div className="row g-2">
+					<div className="col-12 col-md-6">
 						<input
 							type="text"
 							placeholder="Search by recipe name"
@@ -477,7 +473,7 @@ export default function RecipesList() {
 							onChange={getNameValue}
 						/>
 					</div>
-					<div className="col-md-3">
+					<div className="col-6 col-md-3">
 						<select className="form-control" onChange={getCategoryValue}>
 							<option>Search By Category</option>
 							{categoriesList.map((cat) => (
@@ -487,7 +483,7 @@ export default function RecipesList() {
 							))}
 						</select>
 					</div>
-					<div className="col-md-3">
+					<div className="col-6 col-md-3">
 						<select className="form-control" onChange={getTagValue}>
 							<option>Search By Tag</option>
 							{tagsList.map((tag) => (
@@ -499,7 +495,8 @@ export default function RecipesList() {
 					</div>
 				</div>
 			</div>
-			<table className="table p-2 m-1 text-center">
+			<div className="table-responsive">
+			<table className="table table-hover text-center">
 				<thead>
 					<tr className="table-row">
 						<th scope="col">No.</th>
@@ -583,8 +580,10 @@ export default function RecipesList() {
 							<NoData />
 						</td>
 					)}
-				</tbody>
-			</table>			{/* pagination */}
+					</tbody>
+			</table>
+			</div>
+			{/* pagination */}
 			<div className="my-2 d-flex justify-content-center">
 				<ResponsivePagination
 					current={pageNumber}

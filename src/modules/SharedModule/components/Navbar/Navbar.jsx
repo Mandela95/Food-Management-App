@@ -6,7 +6,7 @@ import avatar from "../../../../assets/images/avatar.png";
 import ChangePassword from "../../../AuthenticationModule/components/changePassword/ChangePassword";
 import { AuthContext } from "../../../../context/AuthContext";
 
-export default function Navbar({ loginData }) {
+export default function Navbar({ loginData, isMobile, showMobileSidebar, toggleMobileSidebar }) {
 	const { logout } = useContext(AuthContext);
 	const navigate = useNavigate();
 	
@@ -29,20 +29,26 @@ export default function Navbar({ loginData }) {
 			</Modal>
 
 			<nav className="navbar navbar-expand-lg bg-body-tertiary">
-				<div className="container-fluid">
-					<button
-						className="navbar-toggler"
-						type="button"
-						data-bs-toggle="collapse"
-						data-bs-target="#navbarSupportedContent"
-						aria-controls="navbarSupportedContent"
-						aria-expanded="false"
-						aria-label="Toggle navigation"
-					>
-						<span className="navbar-toggler-icon"></span>
-					</button>
-					<div className="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul className="mb-2 d-flex align-items-center navbar-nav ms-auto mb-lg-0">							<li className="nav-item">
+				<div className="container-fluid px-2 px-md-3">
+					{/* Mobile Menu Toggle - Left Side */}
+					{isMobile && (
+						<button 
+							className="btn btn-link p-2 me-auto"
+							onClick={toggleMobileSidebar}
+							aria-label="Toggle menu"
+							style={{ 
+								color: '#1F263E',
+								fontSize: '1.25rem'
+							}}
+						>
+							<i className={`fas ${showMobileSidebar ? 'fa-times' : 'fa-bars'}`}></i>
+						</button>
+					)}
+					
+					{/* Profile Dropdown - Right Side */}
+					<div className="d-flex ms-auto">
+						<ul className="mb-0 d-flex align-items-center navbar-nav">
+							<li className="nav-item">
 								<Dropdown align="end">
 									<Dropdown.Toggle 
 										variant="link" 

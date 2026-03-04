@@ -138,10 +138,9 @@ export default function CategoriesList() {
 		getCategoriesList(nameValue, 10, pageNumber);
 	}, [pageNumber]);
 	return (
-		<>
-			<Header
+		<>			<Header
 				title="Categories Item"
-				description="You can now add your items that any user can order it from the Application and you can edit"
+				description="Organize your recipes by categories. You can create, edit and manage different food categories for better organization."
 				imageUrl={categoriesImg}
 			/>
 			<Modal show={show} onHide={handleClose}>
@@ -192,11 +191,11 @@ export default function CategoriesList() {
 			</Modal>
 			<div className="container">
 				<div className="row">
-					<div className="p-3 col-6">
+					<div className="p-3 col-12 col-md-6">
 						<h4>Categories Table Details</h4>
 						<span>You can check all details</span>
 					</div>
-					<div className="px-0 py-4 col-6 d-flex justify-content-end">
+					<div className="px-3 py-2 py-md-4 col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
 						<button onClick={handleShow} className="py-2 btn btn-success">
 							Add New Category
 						</button>
@@ -206,9 +205,9 @@ export default function CategoriesList() {
 
 			{/* search input - filtration */}
 
-			<div className="my-3 filtration">
+			<div className="my-3 filtration px-2">
 				<div className="row">
-					<div className="col-md-12">
+					<div className="col-12">
 						<input
 							type="text"
 							placeholder="Search By Category Name"
@@ -219,7 +218,8 @@ export default function CategoriesList() {
 				</div>
 			</div>
 
-			<table className="table p-2 m-1 text-center">
+			<div className="table-responsive">
+			<table className="table table-hover text-center">
 				<thead>
 					<tr className="table-row">
 						<th scope="col">No.</th>
@@ -263,9 +263,11 @@ export default function CategoriesList() {
 						<td colSpan={4}>
 							<NoData />
 						</td>
-					)}
-				</tbody>
-			</table>			{/* pagination */}
+					)}				
+					</tbody>
+			</table>
+			</div>
+			{/* pagination */}
 			<div className="my-2 d-flex justify-content-center">
 				<ResponsivePagination
 					current={pageNumber}

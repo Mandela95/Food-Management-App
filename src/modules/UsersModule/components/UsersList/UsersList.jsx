@@ -128,9 +128,9 @@ export default function UsersList() {
 
 	return (
 		<>
-			<Header
+		<Header
 				title="Users List"
-				description="You can now add your items that any user can order it from the Application and you can edit"
+				description="Manage and view all users in the application. You can view user details and remove users from the system."
 				imageUrl={usersImg}
 			/>
 
@@ -195,18 +195,17 @@ export default function UsersList() {
 					</button>
 				</ModalFooter>
 			</Modal>
-
-			<div className="p-4 container-fluid">
+			<div className="text-center container-fluid">
 				<div className="row">
-					<div className="col-md-6">
+					<div className="w-100 p-3 col-12 col-md-6">
 						<h4>Users Table Details</h4>
 						<span>You can check all details</span>
 					</div>
 				</div>
 
 				<div className="my-3 filteration">
-					<div className="row">
-						<div className="col-md-3">
+					<div className="row g-2">
+						<div className="col-6 col-md-3">
 							<input
 								placeholder="Search By Username"
 								type="text"
@@ -214,7 +213,7 @@ export default function UsersList() {
 								onChange={getUserNameValue}
 							/>
 						</div>
-						<div className="col-md-3">
+						<div className="col-6 col-md-3">
 							<input
 								type="text"
 								placeholder="Search By Email"
@@ -222,7 +221,7 @@ export default function UsersList() {
 								onChange={getEmailValue}
 							/>
 						</div>
-						<div className="col-md-3">
+						<div className="col-6 col-md-3">
 							<input
 								type="text"
 								placeholder="Search By Country"
@@ -230,7 +229,7 @@ export default function UsersList() {
 								onChange={getCountryValue}
 							/>
 						</div>
-						<div className="col-md-2">
+						<div className="col-6 col-md-3">
 							<input
 								type="text"
 								placeholder="Search By Group"
@@ -242,6 +241,7 @@ export default function UsersList() {
 				</div>
 
 				<br />
+				<div className="table-responsive">
 				<table className="table table-hover text-center">
 					<thead>
 						<tr className="table-secondary">
@@ -289,6 +289,7 @@ export default function UsersList() {
 						)}
 					</tbody>
 				</table>
+				</div>
 
 				{isLoading ? (
 					""

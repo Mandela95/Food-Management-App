@@ -4,17 +4,16 @@ export default function RecipesListHeader() {
 	const navigate = useNavigate();
 	return (
 		<>
-			<div className="p-5 container-fluid recipeListHeader">
-				<div className="row">
-					<div className="col-md-6">
-						<div className="mx-4">
+			<div className="p-3 p-md-5 container-fluid recipeListHeader">
+				<div className="row align-items-center">
+					<div className="col-12 col-sm-6 mb-3 mb-sm-0">
+						<div className="mx-2 mx-md-4">
 							<h5>
 								Fill the <span className="text-success">Recipes</span> !
 							</h5>
-							<p className="w-75">{}</p>
 						</div>
 					</div>
-					<div className="text-md-end col-md-6">
+					<div className="col-12 col-sm-6 d-flex justify-content-center justify-content-sm-end align-items-center">
 						<button
 							className="btn btn-success"
 							onClick={() => navigate("/dashboard/recipes")}
